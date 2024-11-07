@@ -1,6 +1,9 @@
+from threading import activeCount
+
 import data
 import build_data
 import unittest
+import hw3
 
 
 # These two values are defined to support testing below. The
@@ -180,28 +183,225 @@ class TestCases(unittest.TestCase):
 
     # Part 1
     # test population_total
+    def test_population_total_1(self):
+        input = reduced_data
+        expected = 55395 + 61697 + 279083 + 207590 + 2622 + 42225 + 7201
+        actual = hw3.population_total(input)
+        self.assertEqual(expected,actual)
+
+    def test_population_total_2(self):
+        input = None
+        expected = 0
+        actual = hw3.population_total(input)
+        self.assertEqual(expected,actual)
 
     # Part 2
     # test filter_by_state
 
+    def test_filter_by_state_1(self):
+        data = reduced_data
+        state = "CA"
+        expected = [reduced_data[2], reduced_data[3]]
+        actual = hw3.filter_by_state(data, state)
+        self.assertEqual(expected, actual)
+
+    def test_filter_by_state_2(self):
+        data = reduced_data
+        state = "NY"
+        expected = []
+        actual = hw3.filter_by_state(data,state)
+        self.assertEqual(expected,actual)
+
     # Part 3
     # test population_by_education
+    def test_population_by_education_1(self):
+        data = reduced_data
+        education_key = "High School or Higher"
+        expected = 55395 * 85.6 + 61697 * 82.2 + 279083 * 89.6 + 207590 * 84.3 + 2622 * 89.2 + 42225 * 81.8 + 7201 * 90.2
+        actual = hw3.population_by_education(data, education_key)
+        self.assertEqual(expected,actual)
+
+    def test_population_by_education_2(self):
+        data = reduced_data
+        education_key = "improper key"
+        expected = 0
+        actual = hw3.population_by_education(data, education_key)
+        self.assertEqual(expected, actual)
+
     # test population_by_ethnicity
+
+    def test_population_by_ethnicity_1(self):
+        data = reduced_data
+        ethnicity_key = "Black Alone"
+        expected = 55395 * 18.7 + 61697 * 1.6 + 279083 * 2.2 + 207590 * 3.0 + 2622 * 0.2 + 42225 * 3.4 + 7201 * 0.7
+        actual = hw3.population_by_ethnicity(data, ethnicity_key)
+        self.assertEqual(expected, actual)
+
+    def test_population_by_ethnicity_2(self):
+
+        data = reduced_data
+        ethnicity_key = "improper key"
+        expected = 0
+        actual = hw3.population_by_ethnicity(data, ethnicity_key)
+        self.assertEqual(expected, actual)
+
     # test population_below_poverty_level
+    def test_population_by_below_poverty_level_1(self):
+        data = reduced_data
+        expected = 55395 * 12.1 + 61697 * 20.2 + 279083 * 14.3 + 207590 * 19.1 + 2622 * 15.7 + 42225 * 18.4 + 7201 * 11.2
+        actual = hw3.population_below_poverty_level(data)
+        self.assertEqual(expected,actual)
+
+    def test_population_by_below_poverty_level_2(self):
+        data = []
+        expected = 0
+        actual = hw3.population_below_poverty_level(data)
+        self.assertEqual(expected,actual)
 
     # Part 4
     # test percent_by_education
+    def test_percent_by_education_1(self):
+        data = reduced_data
+        education_key = "High School or Higher"
+        expected = (55395 * 85.6 + 61697 * 82.2 + 279083 * 89.6 + 207590 * 84.3 + 2622 * 89.2 + 42225 * 81.8 + 7201 * 90.2) / (55395 + 61697 + 279083 + 207590 + 2622 + 42225 + 7201)
+        actual = hw3.percent_by_education(data, education_key)
+        self.assertEqual(expected,actual)
+
+    def test_percent_by_education_2(self):
+        data = reduced_data
+        education_key = "Invalid key"
+        expected = 0
+        actual = hw3.percent_by_education(data, education_key)
+        self.assertEqual(expected,actual)
+
     # test percent_by_ethnicity
+    def test_percent_by_ethnicity_1(self):
+        data = reduced_data
+        ethnicity_key = "Black Alone"
+        expected = (55395 * 18.7 + 61697 * 1.6 + 279083 * 2.2 + 207590 * 3.0 + 2622 * 0.2 + 42225 * 3.4 + 7201 * 0.7) / (55395 + 61697 + 279083 + 207590 + 2622 + 42225 + 7201)
+        actual = hw3.percent_by_ethnicity(data, ethnicity_key)
+        self.assertEqual(expected,actual)
+
+    def test_percent_by_ethnicity_2(self):
+        data = reduced_data
+        ethnicity_key = "Invalid key"
+        expected = 0
+        actual = hw3.percent_by_ethnicity(data, ethnicity_key)
+        self.assertEqual(expected,actual)
+
     # test percent_below_poverty_level
+    def test_percent_below_poverty_level_1(self):
+        data = reduced_data
+        expected = (55395 * 12.1 + 61697 * 20.2 + 279083 * 14.3 + 207590 * 19.1 + 2622 * 15.7 + 42225 * 18.4 + 7201 * 11.2) / (55395 + 61697 + 279083 + 207590 + 2622 + 42225 + 7201)
+        actual = hw3.percent_below_poverty_level(data)
+        self.assertEqual(expected,actual)
+
+    def test_percent_below_poverty_level_2(self):
+        data = []
+        expected = 0
+        actual = hw3.percent_below_poverty_level(data)
+        self.assertEqual(expected,actual)
 
     # Part 5
     # test education_greater_than
-    # test education_less_than
-    # test ethnicity_greater_than
-    # test ethnicity_less_than
-    # test below_poverty_level_greater_than
-    # test below_poverty_level_less_than
 
+    def test_education_greater_than_1(self):
+        data = reduced_data
+        education_key = "High School or Higher"
+        threshold = 85
+        expected = [reduced_data[0], reduced_data[2], reduced_data[4], reduced_data[6]]
+        actual = hw3.education_greater_than(data, education_key,threshold)
+        self.assertEqual(expected,actual)
+
+    def test_education_greater_than_2(self):
+        data = []
+        education_key = "invalid key"
+        threshold = 85
+        expected = []
+        actual = hw3.education_greater_than(data, education_key,threshold)
+        self.assertEqual(expected,actual)
+
+    # test education_less_than
+
+    def test_education_less_than_1(self):
+        data = reduced_data
+        education_key = "High School or Higher"
+        threshold = 85
+        expected = [reduced_data[1], reduced_data[3], reduced_data[5]]
+        actual = hw3.education_less_than(data, education_key,threshold)
+        self.assertEqual(expected,actual)
+
+    def test_education_less_than_2(self):
+        data = []
+        education_key = "invalid key"
+        threshold = 85
+        expected = []
+        actual = hw3.education_less_than(data, education_key,threshold)
+        self.assertEqual(expected,actual)
+
+    # test ethnicity_greater_than
+    def test_ethnicity_greater_than_1(self):
+        data = reduced_data
+        ethnicity_key = "Black Alone"
+        threshold = 5
+        expected = [reduced_data[0]]
+        actual = hw3.ethnicity_greater_than(data, ethnicity_key,threshold)
+        self.assertEqual(expected,actual)
+
+    def test_ethnicity_greater_than_2(self):
+        data = []
+        education_key = "invalid key"
+        threshold = 85
+        expected = []
+        actual = hw3.ethnicity_greater_than(data, education_key,threshold)
+        self.assertEqual(expected,actual)
+
+    # test ethnicity_less_than
+    def test_ethnicity_less_than_1(self):
+        data = reduced_data
+        ethnicity_key = "Black Alone"
+        threshold = 5
+        expected = [reduced_data[1], reduced_data[2], reduced_data[3], reduced_data[4], reduced_data[5], reduced_data[6]]
+        actual = hw3.ethnicity_less_than(data, ethnicity_key,threshold)
+        self.assertEqual(expected,actual)
+
+    def test_ethnicity_less_than_2(self):
+        data = []
+        education_key = "invalid key"
+        threshold = 85
+        expected = []
+        actual = hw3.ethnicity_less_than(data, education_key,threshold)
+        self.assertEqual(expected,actual)
+
+    # test below_poverty_level_greater_than
+    def test_below_poverty_level_greater_than_1(self):
+        data = reduced_data
+        threshold = 15
+        expected = [reduced_data[1], reduced_data[3], reduced_data[4], reduced_data[5]]
+        actual = hw3.below_poverty_level_greater_than(data,threshold)
+        self.assertEqual(expected,actual)
+
+    def test_below_poverty_level_greater_than_2(self):
+        data = []
+        threshold = 15
+        expected = []
+        actual = hw3.below_poverty_level_greater_than(data,threshold)
+        self.assertEqual(expected,actual)
+
+    # test below_poverty_level_less_than
+    def test_below_poverty_level_less_than_1(self):
+        data = reduced_data
+        threshold = 15
+        expected = [reduced_data[0], reduced_data[2], reduced_data[6]]
+        actual = hw3.below_poverty_level_less_than(data,threshold)
+        self.assertEqual(expected,actual)
+
+    def test_below_poverty_level_less_than_2(self):
+        data = []
+        threshold = 15
+        expected = []
+        actual = hw3.below_poverty_level_less_than(data,threshold)
+        self.assertEqual(expected,actual)
 
 
 if __name__ == '__main__':
